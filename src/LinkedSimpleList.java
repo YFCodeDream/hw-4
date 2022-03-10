@@ -128,10 +128,14 @@ public class LinkedSimpleList<T> implements SimpleList<T>, Iterable<T> {
     }
 
     /**
-     * 将第i个元素移动到链表头部
+     * 将下标为i的元素移动到链表头部
      * @param i 待移动元素下标
      */
     public void removeToFirst(int i) {
+        if (i < 0 || i > size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         if (i == 0) {
             return;
         }
@@ -146,6 +150,27 @@ public class LinkedSimpleList<T> implements SimpleList<T>, Iterable<T> {
         removedNode.next = head;
         head = removedNode;
 
+        renewIndices();
+    }
+
+    public void reverse() {
+        Node<T> currentNode = head;
+        Node<T> hinderNode = currentNode.next;
+        Node<T> hinderNextNode = hinderNode != null ? hinderNode.next : null;
+
+        while (hinderNode != null) {
+            hinderNode.next = currentNode;
+            if (currentNode == head) {
+                currentNode.next = null;
+            }
+            currentNode = hinderNode;
+            hinderNode = hinderNextNode;
+            if (hinderNode != null) {
+                hinderNextNode = hinderNode.next;
+            }
+        }
+
+        head = currentNode;
         renewIndices();
     }
 
